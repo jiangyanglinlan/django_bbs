@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+<li class="breadcrumb-item active">板块</li>
+{% endblock %}
+
+{% block content %}
+<table class="table">
+    <thead class="thead-inverse thead-dark">
+    <tr>
+        <th>板块</th>
+        <th>文章</th>
+        <th>总评论</th>
+        <th>最后发表</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for board in boards %}
+    <tr>
+        <td>
+            <a href="{% url 'board_topics' board.pk %}">{{ board.name }}</a>
+            <small class="text-muted d-block">{{ board.description }}</small>
+        </td>
+        <td class="align-middle">
+            {{ board.topics.count }}
+        </td>
+        <td class="align-middle">
+            {{ board.get_posts_count }}
+        </td>
+        <td class="align-middle">
+            {% with post=board.get_last_post %}
+            <small>
+                    {% if post.topic.pk %}
+                    <a href="{% url 'topic_posts' board.pk post.topic.pk %}">
+                        {{ post.created_by.username }} 发表于 {{ post.created_at }}
+                     </a>
+                    {% else %}
+                        暂无文章
+                    {% endif %}
+            </small>
+            {% endwith %}
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
